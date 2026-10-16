@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_deep">#07090F</color>
+    <color name="bg_card">#0F1420</color>
+    <color name="bg_elevated">#151B28</color>
+    <color name="neon_cyan">#00E5FF</color>
+    <color name="neon_purple">#7C4DFF</color>
+    <color name="neon_pink">#FF4081</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#8A97AB</color>
+    <color name="divider">#1E2636</color>
+</resources>
