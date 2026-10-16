@@ -1,0 +1,6 @@
+-keep class com.xtreme.iptv.model.** { *; }
+-keep class com.google.android.exoplayer2.** { *; }
+-keep class org.json.** { *; }
+-dontwarn okhttp3.**
+-dontwarn com.bumptech.glide.**
+-dontwarn org.conscrypt.**
