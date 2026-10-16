@@ -51,6 +51,7 @@ object XtreamApi {
     /**
      * رابط القناة بصيغة TS (يعمل مع معظم مزودي Xtream)
      */
+    
     fun streamUrlTs(streamId: Int): String =
         "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.ts"
 
@@ -59,4 +60,7 @@ object XtreamApi {
      */
     fun streamUrlHls(streamId: Int): String =
         "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
+fun streamUrl(streamId: Int): String =
+    "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
+
 }
