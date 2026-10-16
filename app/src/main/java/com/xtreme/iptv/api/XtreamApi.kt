@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit
 object XtreamApi {
 
     private val client = OkHttpClient.Builder()
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(25, TimeUnit.SECONDS)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
         .retryOnConnectionFailure(true)
         .build()
 
@@ -48,6 +48,15 @@ object XtreamApi {
         return list
     }
 
-    fun streamUrl(streamId: Int): String =
+    /**
+     * رابط القناة بصيغة TS (يعمل مع معظم مزودي Xtream)
+     */
+    fun streamUrlTs(streamId: Int): String =
+        "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.ts"
+
+    /**
+     * رابط القناة بصيغة M3U8
+     */
+    fun streamUrlHls(streamId: Int): String =
         "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
 }
