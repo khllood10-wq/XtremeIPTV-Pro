@@ -58,9 +58,7 @@ object XtreamApi {
     /**
      * رابط القناة بصيغة M3U8
      */
-    fun streamUrlHls(streamId: Int): String =
-        "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
-fun streamUrl(streamId: Int): String =
+    fun streamUrl(streamId: Int): String =
     "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
 
 }
