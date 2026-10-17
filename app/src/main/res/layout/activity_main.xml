@@ -36,7 +36,14 @@
             android:textColor="@color/text_secondary"
             android:textSize="12sp"
             android:text="0"/>
-
+<ImageView
+    android:id="@+id/openVodBtn"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:layout_marginEnd="12dp"
+    android:src="@android:drawable/ic_menu_gallery"
+    android:tint="@color/neon_cyan"
+    android:background="?android:attr/selectableItemBackgroundBorderless"/>
         <ImageView
             android:id="@+id/filterFavBtn"
             android:layout_width="32dp"
