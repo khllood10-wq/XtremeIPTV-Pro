@@ -5,44 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- المحتوى الأساسي للتطبيق -->
-    <LinearLayout
+    <!-- 1. المحتوى الأساسي (الشاشات والبار السفلي وزر الإعدادات) -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@color/bg_deep">
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bg_card"
-            app:itemIconTint="@color/neon_cyan"
-            app:itemTextColor="@color/text_primary"
-            app:itemActiveIndicatorStyle="@null"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_nav_menu" />
-    </LinearLayout>
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-    <!-- أيقونة السحب والفتح على اليمين -->
-    <ImageView
-        android:id="@+id/openDrawerBtn"
-        android:layout_width="40dp"
-        android:layout_height="60dp"
-        android:layout_gravity="end|center_vertical"
-        android:background="@drawable/bg_search"
-        android:src="@android:drawable/ic_menu_sort_by_size"
-        android:tint="@color/neon_cyan"
-        android:contentDescription="Settings"
-        android:elevation="8dp"/>
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_nav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_card"
+                app:itemIconTint="@color/neon_cyan"
+                app:itemTextColor="@color/text_primary"
+                app:itemActiveIndicatorStyle="@null"
+                app:labelVisibilityMode="labeled"
+                app:menu="@menu/bottom_nav_menu" />
+        </LinearLayout>
 
-    <!-- القائمة الجانبية (تنزلق من اليمين) -->
+        <!-- زر فتح القائمة الجانبية (يطفو على يمين الشاشة) -->
+        <ImageView
+            android:id="@+id/openDrawerBtn"
+            android:layout_width="40dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_search"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            android:tint="@color/neon_cyan"
+            android:contentDescription="Settings"
+            android:elevation="8dp"/>
+
+    </RelativeLayout>
+
+    <!-- 2. القائمة الجانبية (تنزلق من اليمين) -->
     <LinearLayout
         android:layout_width="280dp"
         android:layout_height="match_parent"
