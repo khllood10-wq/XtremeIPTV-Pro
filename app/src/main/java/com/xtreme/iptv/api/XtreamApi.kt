@@ -1,5 +1,6 @@
 package com.xtreme.iptv.api
 
+import com.xtreme.iptv.model.Category
 import com.xtreme.iptv.model.Channel
 import com.xtreme.iptv.utils.Prefs
 import okhttp3.OkHttpClient
@@ -26,9 +27,35 @@ object XtreamApi {
         return j.contains("user_info")
     }
 
-    fun getLiveStreams(): List<Channel> {
+    /**
+     * جلب تصنيفات القنوات المباشرة
+     */
+    fun getLiveCategories(): List<Category> {
         val json = get(
-            "${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_streams"
+            "${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_categories"
+        ) ?: return emptyList()
+
+        val list = mutableListOf<Category>()
+        try {
+            val arr = JSONArray(json)
+            for (i in 0 until arr.length()) {
+                val o = arr.getJSONObject(i)
+                list.add(Category(
+                    id = o.optString("category_id"),
+                    name = o.optString("category_name")
+                ))
+            }
+        } catch (_: Exception) {}
+        return list
+    }
+
+    /**
+     * جلب القنوات المباشرة (مع دعم التصنيفات)
+     */
+    fun getLiveStreams(categoryId: String? = null): List<Channel> {
+        val cat = if (categoryId.isNullOrEmpty()) "" else "&category_id=$categoryId"
+        val json = get(
+            "${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_streams$cat"
         ) ?: return emptyList()
 
         val list = mutableListOf<Channel>()
