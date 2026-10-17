@@ -19,6 +19,8 @@
         android:background="@color/bg_card"
         app:itemIconTint="@color/neon_cyan"
         app:itemTextColor="@color/text_primary"
+        app:itemActiveIndicatorStyle="@null"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>
