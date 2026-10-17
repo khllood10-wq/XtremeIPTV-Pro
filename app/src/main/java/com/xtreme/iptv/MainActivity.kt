@@ -67,6 +67,10 @@ class MainActivity : AppCompatActivity() {
             applyFilter()
         }
 
+        findViewById<ImageView>(R.id.openVodBtn).setOnClickListener {
+            startActivity(Intent(this@MainActivity, VodActivity::class.java))
+        }
+
         loadCategories()
     }
 
@@ -105,9 +109,6 @@ class MainActivity : AppCompatActivity() {
             loadChannels(null)
         }
     }
-    findViewById<ImageView>(R.id.openVodBtn).setOnClickListener {
-    startActivity(Intent(this@MainActivity, VodActivity::class.java))
-}
 
     private fun loadChannels(categoryId: String?) {
         swipe.isRefreshing = true
