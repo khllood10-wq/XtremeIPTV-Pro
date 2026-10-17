@@ -2,6 +2,7 @@ package com.xtreme.iptv.api
 
 import com.xtreme.iptv.model.Category
 import com.xtreme.iptv.model.Channel
+import com.xtreme.iptv.model.VodItem
 import com.xtreme.iptv.utils.Prefs
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -17,57 +18,69 @@ object XtreamApi {
         .build()
 
     private fun get(url: String): String? = try {
-        client.newCall(Request.Builder().url(url).build())
-            .execute().body?.string()
+        client.newCall(Request.Builder().url(url).build()).execute().body?.string()
     } catch (e: Exception) { null }
 
     fun login(): Boolean {
-        val j = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}")
-            ?: return false
+        val j = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}") ?: return false
         return j.contains("user_info")
     }
 
-    /**
-     * جلب تصنيفات القنوات المباشرة
-     */
     fun getLiveCategories(): List<Category> {
-        val json = get(
-            "${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_categories"
-        ) ?: return emptyList()
-
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_categories") ?: return emptyList()
         val list = mutableListOf<Category>()
         try {
             val arr = JSONArray(json)
             for (i in 0 until arr.length()) {
                 val o = arr.getJSONObject(i)
-                list.add(Category(
-                    id = o.optString("category_id"),
-                    name = o.optString("category_name")
-                ))
+                list.add(Category(o.optString("category_id"), o.optString("category_name")))
             }
         } catch (_: Exception) {}
         return list
     }
 
-    /**
-     * جلب القنوات المباشرة (مع دعم التصنيفات)
-     */
     fun getLiveStreams(categoryId: String? = null): List<Channel> {
         val cat = if (categoryId.isNullOrEmpty()) "" else "&category_id=$categoryId"
-        val json = get(
-            "${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_streams$cat"
-        ) ?: return emptyList()
-
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_streams$cat") ?: return emptyList()
         val list = mutableListOf<Channel>()
         try {
             val arr = JSONArray(json)
             for (i in 0 until arr.length()) {
                 val o = arr.getJSONObject(i)
-                list.add(Channel(
-                    num = o.optInt("num"),
-                    name = o.optString("name"),
+                list.add(Channel(o.optInt("num"), o.optString("name"), o.optInt("stream_id"), o.optString("stream_icon"), o.optString("category_id")))
+            }
+        } catch (_: Exception) {}
+        return list
+    }
+
+    // VOD Functions
+    fun getVodCategories(): List<Category> {
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_vod_categories") ?: return emptyList()
+        val list = mutableListOf<Category>()
+        try {
+            val arr = JSONArray(json)
+            for (i in 0 until arr.length()) {
+                val o = arr.getJSONObject(i)
+                list.add(Category(o.optString("category_id"), o.optString("category_name")))
+            }
+        } catch (_: Exception) {}
+        return list
+    }
+
+    fun getVodStreams(categoryId: String? = null): List<VodItem> {
+        val cat = if (categoryId.isNullOrEmpty()) "" else "&category_id=$categoryId"
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_vod_streams$cat") ?: return emptyList()
+        val list = mutableListOf<VodItem>()
+        try {
+            val arr = JSONArray(json)
+            for (i in 0 until arr.length()) {
+                val o = arr.getJSONObject(i)
+                list.add(VodItem(
                     streamId = o.optInt("stream_id"),
+                    name = o.optString("name"),
                     streamIcon = o.optString("stream_icon"),
+                    rating = o.optString("rating"),
+                    containerExtension = o.optString("container_extension", "mp4"),
                     categoryId = o.optString("category_id")
                 ))
             }
@@ -75,9 +88,7 @@ object XtreamApi {
         return list
     }
 
-    fun streamUrl(streamId: Int): String =
-        "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
-
-    fun streamUrlTs(streamId: Int): String =
-        "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.ts"
+    fun streamUrl(streamId: Int): String = "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
+    fun streamUrlTs(streamId: Int): String = "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.ts"
+    fun vodUrl(streamId: Int, ext: String): String = "${Prefs.host}/movie/${Prefs.user}/${Prefs.pass}/$streamId.$ext"
 }
