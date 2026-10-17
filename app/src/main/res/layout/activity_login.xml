@@ -12,14 +12,23 @@
         android:padding="28dp"
         android:gravity="center">
 
+        <!-- الشعار -->
+        <ImageView
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="50dp"
+            android:src="@mipmap/ic_launcher"/>
+
+        <!-- عنوان التطبيق -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_title"
             android:textColor="@color/neon_cyan"
-            android:textSize="28sp"
+            android:textSize="30sp"
             android:textStyle="bold"
-            android:layout_marginTop="80dp"/>
+            android:letterSpacing="0.08"
+            android:layout_marginTop="24dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,8 +36,9 @@
             android:text="@string/login_subtitle"
             android:textColor="@color/text_secondary"
             android:textSize="13sp"
-            android:layout_marginBottom="40dp"/>
+            android:layout_marginBottom="48dp"/>
 
+        <!-- حقل السيرفر -->
         <EditText
             android:id="@+id/hostInput"
             android:layout_width="match_parent"
@@ -39,8 +49,10 @@
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary"
             android:backgroundTint="@color/neon_cyan"
+            android:textSize="14sp"
             android:layout_marginBottom="14dp"/>
 
+        <!-- اسم المستخدم -->
         <EditText
             android:id="@+id/userInput"
             android:layout_width="match_parent"
@@ -50,8 +62,10 @@
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary"
             android:backgroundTint="@color/neon_cyan"
+            android:textSize="14sp"
             android:layout_marginBottom="14dp"/>
 
+        <!-- كلمة المرور -->
         <EditText
             android:id="@+id/passInput"
             android:layout_width="match_parent"
@@ -62,8 +76,10 @@
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary"
             android:backgroundTint="@color/neon_cyan"
+            android:textSize="14sp"
             android:layout_marginBottom="20dp"/>
 
+        <!-- رسالة الخطأ -->
         <TextView
             android:id="@+id/errorTxt"
             android:layout_width="match_parent"
@@ -74,6 +90,7 @@
             android:layout_marginBottom="12dp"
             android:visibility="gone"/>
 
+        <!-- زر الدخول -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="56dp">
@@ -93,7 +110,17 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:indeterminateTint="#000000"/>
         </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="v1.0.0"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:layout_marginTop="32dp"/>
     </LinearLayout>
 </ScrollView>
