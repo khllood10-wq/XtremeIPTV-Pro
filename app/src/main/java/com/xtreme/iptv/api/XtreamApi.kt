@@ -2,6 +2,7 @@ package com.xtreme.iptv.api
 
 import com.xtreme.iptv.model.Category
 import com.xtreme.iptv.model.Channel
+import com.xtreme.iptv.model.SeriesItem
 import com.xtreme.iptv.model.VodItem
 import com.xtreme.iptv.utils.Prefs
 import okhttp3.OkHttpClient
@@ -28,15 +29,7 @@ object XtreamApi {
 
     fun getLiveCategories(): List<Category> {
         val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_categories") ?: return emptyList()
-        val list = mutableListOf<Category>()
-        try {
-            val arr = JSONArray(json)
-            for (i in 0 until arr.length()) {
-                val o = arr.getJSONObject(i)
-                list.add(Category(o.optString("category_id"), o.optString("category_name")))
-            }
-        } catch (_: Exception) {}
-        return list
+        return parseCategories(json)
     }
 
     fun getLiveStreams(categoryId: String? = null): List<Channel> {
@@ -53,18 +46,9 @@ object XtreamApi {
         return list
     }
 
-    // VOD Functions
     fun getVodCategories(): List<Category> {
         val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_vod_categories") ?: return emptyList()
-        val list = mutableListOf<Category>()
-        try {
-            val arr = JSONArray(json)
-            for (i in 0 until arr.length()) {
-                val o = arr.getJSONObject(i)
-                list.add(Category(o.optString("category_id"), o.optString("category_name")))
-            }
-        } catch (_: Exception) {}
-        return list
+        return parseCategories(json)
     }
 
     fun getVodStreams(categoryId: String? = null): List<VodItem> {
@@ -83,6 +67,43 @@ object XtreamApi {
                     containerExtension = o.optString("container_extension", "mp4"),
                     categoryId = o.optString("category_id")
                 ))
+            }
+        } catch (_: Exception) {}
+        return list
+    }
+
+    fun getSeriesCategories(): List<Category> {
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_series_categories") ?: return emptyList()
+        return parseCategories(json)
+    }
+
+    fun getSeries(categoryId: String? = null): List<SeriesItem> {
+        val cat = if (categoryId.isNullOrEmpty()) "" else "&category_id=$categoryId"
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_series$cat") ?: return emptyList()
+        val list = mutableListOf<SeriesItem>()
+        try {
+            val arr = JSONArray(json)
+            for (i in 0 until arr.length()) {
+                val o = arr.getJSONObject(i)
+                list.add(SeriesItem(
+                    seriesId = o.optInt("series_id"),
+                    name = o.optString("name"),
+                    cover = o.optString("cover"),
+                    rating = o.optString("rating"),
+                    categoryId = o.optString("category_id")
+                ))
+            }
+        } catch (_: Exception) {}
+        return list
+    }
+
+    private fun parseCategories(json: String): List<Category> {
+        val list = mutableListOf<Category>()
+        try {
+            val arr = JSONArray(json)
+            for (i in 0 until arr.length()) {
+                val o = arr.getJSONObject(i)
+                list.add(Category(o.optString("category_id"), o.optString("category_name")))
             }
         } catch (_: Exception) {}
         return list
