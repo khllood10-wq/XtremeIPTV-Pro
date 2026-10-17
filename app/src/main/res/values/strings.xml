@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Xtreme IPTV Pro</string>
+    <string name="app_name">Xtreme IPTV</string>
 
-    <string name="login_title">تسجيل الدخول</string>
+    <string name="login_title">Xtreme IPTV</string>
     <string name="login_subtitle">سجّل الدخول إلى مزوّدك</string>
     <string name="login_host_hint">http://server:port</string>
     <string name="login_user_hint">اسم المستخدم</string>
@@ -13,6 +13,9 @@
 
     <string name="main_live_channels">📺 القنوات المباشرة</string>
     <string name="main_no_channels">لا توجد قنوات لعرضها</string>
+    <string name="main_search_hint">ابحث عن قناة…</string>
 
-    <string name="player_error">⚠ تعذر تشغيل البث — جرب سيرفراً آخر</string>
+    <string name="player_error">⚠ تعذر تشغيل البث — جرب قناة أخرى</string>
+    <string name="player_reload">إعادة تحميل</string>
+    <string name="player_fullscreen">شاشة كاملة</string>
 </resources>
