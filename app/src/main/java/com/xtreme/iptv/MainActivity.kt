@@ -7,10 +7,10 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +20,7 @@ import com.xtreme.iptv.adapter.CategoryAdapter
 import com.xtreme.iptv.api.XtreamApi
 import com.xtreme.iptv.model.Category
 import com.xtreme.iptv.model.Channel
+import com.xtreme.iptv.utils.FavManager
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -32,9 +33,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var channelCount: TextView
     private lateinit var searchInput: EditText
     private lateinit var clearSearch: ImageView
+    private lateinit var filterFavBtn: ImageView
 
     private var currentCategoryId: String? = null
     private var searchQuery: String = ""
+    private var showOnlyFavs = false
     private var allChannels: List<Channel> = emptyList()
     private var filteredChannels: List<Channel> = emptyList()
 
@@ -49,13 +52,19 @@ class MainActivity : AppCompatActivity() {
         channelCount = findViewById(R.id.channelCount)
         searchInput = findViewById(R.id.searchInput)
         clearSearch = findViewById(R.id.clearSearch)
+        filterFavBtn = findViewById(R.id.filterFavBtn)
 
         rv.layoutManager = LinearLayoutManager(this)
         categoryRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         swipe.setOnRefreshListener { loadChannels(currentCategoryId) }
-
         setupSearch()
+
+        filterFavBtn.setOnClickListener {
+            showOnlyFavs = !showOnlyFavs
+            filterFavBtn.setColorFilter(if (showOnlyFavs) 0xFF00D9FF.toInt() else 0xFF7C8699.toInt())
+            applyFilter()
+        }
 
         loadCategories()
     }
@@ -71,13 +80,6 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        searchInput.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                applyFilter()
-                true
-            } else false
-        }
-
         clearSearch.setOnClickListener {
             searchInput.setText("")
             searchQuery = ""
@@ -89,7 +91,6 @@ class MainActivity : AppCompatActivity() {
     private fun loadCategories() {
         scope.launch {
             val list = withContext(Dispatchers.IO) { XtreamApi.getLiveCategories() }
-
             val allList = mutableListOf(Category("", "الكل"))
             allList.addAll(list)
 
@@ -100,7 +101,6 @@ class MainActivity : AppCompatActivity() {
                 clearSearch.visibility = View.GONE
                 loadChannels(currentCategoryId)
             }
-
             loadChannels(null)
         }
     }
@@ -116,12 +116,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyFilter() {
-        filteredChannels = if (searchQuery.isEmpty()) {
-            allChannels
-        } else {
-            allChannels.filter {
-                it.name.contains(searchQuery, ignoreCase = true)
-            }
+        val favs = FavManager.getFavs(this)
+        
+        filteredChannels = allChannels.filter { ch ->
+            val matchSearch = searchQuery.isEmpty() || ch.name.contains(searchQuery, ignoreCase = true)
+            val matchFav = !showOnlyFavs || favs.contains(ch.streamId.toString())
+            matchSearch && matchFav
         }
 
         empty.visibility = if (filteredChannels.isEmpty()) View.VISIBLE else View.GONE
@@ -135,6 +135,11 @@ class MainActivity : AppCompatActivity() {
                 putExtra("logo", ch.streamIcon)
             })
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        applyFilter()
     }
 
     override fun onDestroy() {
@@ -151,11 +156,11 @@ class MainActivity : AppCompatActivity() {
             val logo: ImageView = v.findViewById(R.id.channelLogo)
             val name: TextView = v.findViewById(R.id.channelName)
             val num: TextView = v.findViewById(R.id.channelNum)
+            val favBtn: ImageView = v.findViewById(R.id.favBtn)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-            val v = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_channel, parent, false)
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.item_channel, parent, false)
             return VH(v)
         }
 
@@ -163,9 +168,21 @@ class MainActivity : AppCompatActivity() {
             val c = items[position]
             holder.name.text = c.name
             holder.num.text = c.num.toString().padStart(3, '0')
+            
             if (c.streamIcon.isNotEmpty()) {
                 Glide.with(holder.itemView).load(c.streamIcon).into(holder.logo)
             }
+
+            val isFav = FavManager.isFav(this@MainActivity, c.streamId)
+            holder.favBtn.setColorFilter(if (isFav) 0xFFFF4081.toInt() else 0xFF7C8699.toInt())
+
+            holder.favBtn.setOnClickListener {
+                val added = FavManager.toggleFav(this@MainActivity, c.streamId)
+                holder.favBtn.setColorFilter(if (added) 0xFFFF4081.toInt() else 0xFF7C8699.toInt())
+                Toast.makeText(this@MainActivity, if (added) "أضيف للمفضلة" else "أزيل من المفضلة", Toast.LENGTH_SHORT).show()
+                if (showOnlyFavs && !added) applyFilter()
+            }
+
             holder.itemView.setOnClickListener { onClick(c) }
         }
 
