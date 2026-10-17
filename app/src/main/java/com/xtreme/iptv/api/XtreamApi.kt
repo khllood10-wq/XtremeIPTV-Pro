@@ -48,11 +48,9 @@ object XtreamApi {
         return list
     }
 
-    // رابط M3U8 (الأساسي)
     fun streamUrl(streamId: Int): String =
         "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
 
-    // رابط TS (احتياطي)
     fun streamUrlTs(streamId: Int): String =
         "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.ts"
 }
