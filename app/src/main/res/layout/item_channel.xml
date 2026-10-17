@@ -3,13 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
+    android:layout_height="92dp"
     android:layout_marginHorizontal="14dp"
     android:layout_marginVertical="5dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     app:cardCornerRadius="18dp"
     app:cardBackgroundColor="@color/bg_card"
     app:cardElevation="0dp"
-    app:strokeColor="#2200E5FF"
+    app:strokeColor="#1A00D9FF"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -19,34 +22,75 @@
         android:gravity="center_vertical"
         android:padding="10dp">
 
+        <!-- رقم القناة -->
         <TextView
             android:id="@+id/channelNum"
-            android:layout_width="48dp"
+            android:layout_width="46dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="001"
             android:textColor="@color/neon_cyan"
             android:textStyle="bold"
-            android:textSize="15sp"/>
+            android:textSize="14sp"/>
 
-        <ImageView
-            android:id="@+id/channelLogo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:padding="4dp"
-            android:background="@color/bg_elevated"/>
+        <!-- شعار القناة -->
+        <FrameLayout
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:background="@color/bg_elevated">
 
-        <TextView
-            android:id="@+id/channelName"
+            <ImageView
+                android:id="@+id/channelLogo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="6dp"
+                android:scaleType="centerInside"/>
+
+            <!-- نقطة حمراء مباشر -->
+            <View
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_dot_live"/>
+        </FrameLayout>
+
+        <!-- اسم القناة -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="14dp"
-            android:text="Channel"
-            android:textColor="@color/text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:maxLines="2"
-            android:ellipsize="end"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/channelName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Channel"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● LIVE"
+                android:textColor="@color/live_red"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- سهم -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="›"
+            android:textColor="@color/neon_cyan"
+            android:textSize="26sp"
+            android:layout_marginEnd="6dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
