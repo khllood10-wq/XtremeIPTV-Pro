@@ -1,140 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/bg_deep">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="20dp">
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@mipmap/ic_launcher"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="12dp"
-            android:text="@string/main_live_channels"
-            android:textColor="@color/neon_cyan"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/channelCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp"
-            android:text="0"/>
-
-        <ImageView
-            android:id="@+id/openVodBtn"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="12dp"
-            android:src="@android:drawable/ic_menu_gallery"
-            android:tint="@color/neon_cyan"
-            android:background="?android:attr/selectableItemBackgroundBorderless"/>
-
-        <ImageView
-            android:id="@+id/filterFavBtn"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@android:drawable/btn_star"
-            android:tint="@color/text_secondary"
-            android:background="?android:attr/selectableItemBackgroundBorderless"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginHorizontal="14dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="14dp"
-        android:background="@drawable/bg_search">
+        android:layout_height="wrap_content"
+        android:background="@color/bg_card"
+        app:itemIconTint="@color/neon_cyan"
+        app:itemTextColor="@color/text_primary"
+        app:menu="@menu/bottom_nav_menu" />
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@android:drawable/ic_menu_search"
-            android:tint="@color/neon_cyan"/>
-
-        <EditText
-            android:id="@+id/searchInput"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:hint="@string/main_search_hint"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary"
-            android:textSize="14sp"
-            android:background="@null"
-            android:inputType="text"
-            android:imeOptions="actionSearch"
-            android:maxLines="1"/>
-
-        <ImageView
-            android:id="@+id/clearSearch"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="4dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:tint="@color/text_secondary"
-            android:visibility="gone"
-            android:background="?android:attr/selectableItemBackgroundBorderless"/>
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categoryRv"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:paddingHorizontal="12dp"
-        android:clipToPadding="false"
-        android:scrollbars="none"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider"
-        android:layout_marginTop="8dp"/>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp"
-                android:clipToPadding="false"/>
-
-            <TextView
-                android:id="@+id/emptyTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/main_no_channels"
-                android:textColor="@color/text_secondary"
-                android:visibility="gone"/>
-        </FrameLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
