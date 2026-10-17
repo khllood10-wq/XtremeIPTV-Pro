@@ -37,13 +37,23 @@
             android:text="0"/>
     </LinearLayout>
 
+    <!-- Categories bar -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categoryRv"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingHorizontal="12dp"
+        android:clipToPadding="false"
+        android:scrollbars="none"/>
+
     <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider"/>
+        android:background="@color/divider"
+        android:layout_marginTop="8dp"/>
 
-    <!-- Content -->
+    <!-- Channels list -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
