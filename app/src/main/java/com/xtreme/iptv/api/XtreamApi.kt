@@ -8,6 +8,7 @@ import com.xtreme.iptv.utils.Prefs
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
+import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 object XtreamApi {
@@ -97,6 +98,11 @@ object XtreamApi {
         return list
     }
 
+    fun getSeriesInfo(seriesId: Int): JSONObject? {
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_series_info&series_id=$seriesId") ?: return null
+        return try { JSONObject(json) } catch (e: Exception) { null }
+    }
+
     private fun parseCategories(json: String): List<Category> {
         val list = mutableListOf<Category>()
         try {
@@ -112,4 +118,5 @@ object XtreamApi {
     fun streamUrl(streamId: Int): String = "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.m3u8"
     fun streamUrlTs(streamId: Int): String = "${Prefs.host}/live/${Prefs.user}/${Prefs.pass}/$streamId.ts"
     fun vodUrl(streamId: Int, ext: String): String = "${Prefs.host}/movie/${Prefs.user}/${Prefs.pass}/$streamId.$ext"
+    fun seriesEpisodeUrl(episodeId: String, ext: String): String = "${Prefs.host}/series/${Prefs.user}/${Prefs.pass}/$episodeId.$ext"
 }
