@@ -58,8 +58,10 @@ class SeriesFragment : Fragment() {
             empty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
             rv.adapter = SeriesAdapter(list) { s ->
                 // سيتم ربطه بصفحة الحلقات لاحقاً
-                Toast.makeText(requireContext(), "قريباً: حلقات ${s.name}", Toast.LENGTH_SHORT).show()
-            }
+                startActivity(Intent(requireContext(), SeriesDetailActivity::class.java).apply {
+    putExtra("seriesId", s.seriesId)
+    putExtra("name", s.name)
+})    }
         }
     }
 
