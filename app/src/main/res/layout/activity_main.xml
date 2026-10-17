@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:background="@color/bg_deep">
 
-    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -36,14 +35,16 @@
             android:textColor="@color/text_secondary"
             android:textSize="12sp"
             android:text="0"/>
-<ImageView
-    android:id="@+id/openVodBtn"
-    android:layout_width="32dp"
-    android:layout_height="32dp"
-    android:layout_marginEnd="12dp"
-    android:src="@android:drawable/ic_menu_gallery"
-    android:tint="@color/neon_cyan"
-    android:background="?android:attr/selectableItemBackgroundBorderless"/>
+
+        <ImageView
+            android:id="@+id/openVodBtn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="12dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:tint="@color/neon_cyan"
+            android:background="?android:attr/selectableItemBackgroundBorderless"/>
+
         <ImageView
             android:id="@+id/filterFavBtn"
             android:layout_width="32dp"
@@ -53,7 +54,6 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"/>
     </LinearLayout>
 
-    <!-- Search View -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -95,7 +95,6 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"/>
     </LinearLayout>
 
-    <!-- Categories bar -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/categoryRv"
         android:layout_width="match_parent"
@@ -105,14 +104,12 @@
         android:clipToPadding="false"
         android:scrollbars="none"/>
 
-    <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/divider"
         android:layout_marginTop="8dp"/>
 
-    <!-- Channels list -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
         android:layout_width="match_parent"
