@@ -2,9 +2,13 @@ package com.xtreme.iptv
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -26,8 +30,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var empty: TextView
     private lateinit var channelCount: TextView
+    private lateinit var searchInput: EditText
+    private lateinit var clearSearch: ImageView
 
     private var currentCategoryId: String? = null
+    private var searchQuery: String = ""
+    private var allChannels: List<Channel> = emptyList()
+    private var filteredChannels: List<Channel> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,29 +47,60 @@ class MainActivity : AppCompatActivity() {
         swipe = findViewById(R.id.swipe)
         empty = findViewById(R.id.emptyTxt)
         channelCount = findViewById(R.id.channelCount)
+        searchInput = findViewById(R.id.searchInput)
+        clearSearch = findViewById(R.id.clearSearch)
 
         rv.layoutManager = LinearLayoutManager(this)
         categoryRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         swipe.setOnRefreshListener { loadChannels(currentCategoryId) }
 
+        setupSearch()
+
         loadCategories()
+    }
+
+    private fun setupSearch() {
+        searchInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {}
+            override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {
+                searchQuery = s?.toString()?.trim() ?: ""
+                clearSearch.visibility = if (searchQuery.isEmpty()) View.GONE else View.VISIBLE
+                applyFilter()
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        searchInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                applyFilter()
+                true
+            } else false
+        }
+
+        clearSearch.setOnClickListener {
+            searchInput.setText("")
+            searchQuery = ""
+            clearSearch.visibility = View.GONE
+            applyFilter()
+        }
     }
 
     private fun loadCategories() {
         scope.launch {
             val list = withContext(Dispatchers.IO) { XtreamApi.getLiveCategories() }
 
-            // أضف خيار "الكل" في البداية
             val allList = mutableListOf(Category("", "الكل"))
             allList.addAll(list)
 
             categoryRv.adapter = CategoryAdapter(allList) { cat ->
                 currentCategoryId = if (cat.id.isEmpty()) null else cat.id
+                searchInput.setText("")
+                searchQuery = ""
+                clearSearch.visibility = View.GONE
                 loadChannels(currentCategoryId)
             }
 
-            // حمّل كل القنوات في البداية
             loadChannels(null)
         }
     }
@@ -70,17 +110,30 @@ class MainActivity : AppCompatActivity() {
         scope.launch {
             val list = withContext(Dispatchers.IO) { XtreamApi.getLiveStreams(categoryId) }
             swipe.isRefreshing = false
-            empty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
-            channelCount.text = list.size.toString()
+            allChannels = list
+            applyFilter()
+        }
+    }
 
-            rv.adapter = ChannelAdapter(list) { ch ->
-                startActivity(Intent(this@MainActivity, PlayerActivity::class.java).apply {
-                    putExtra("name", ch.name)
-                    putExtra("url", XtreamApi.streamUrl(ch.streamId))
-                    putExtra("streamId", ch.streamId)
-                    putExtra("logo", ch.streamIcon)
-                })
+    private fun applyFilter() {
+        filteredChannels = if (searchQuery.isEmpty()) {
+            allChannels
+        } else {
+            allChannels.filter {
+                it.name.contains(searchQuery, ignoreCase = true)
             }
+        }
+
+        empty.visibility = if (filteredChannels.isEmpty()) View.VISIBLE else View.GONE
+        channelCount.text = filteredChannels.size.toString()
+
+        rv.adapter = ChannelAdapter(filteredChannels) { ch ->
+            startActivity(Intent(this@MainActivity, PlayerActivity::class.java).apply {
+                putExtra("name", ch.name)
+                putExtra("url", XtreamApi.streamUrl(ch.streamId))
+                putExtra("streamId", ch.streamId)
+                putExtra("logo", ch.streamIcon)
+            })
         }
     }
 
