@@ -1,6 +1,7 @@
 package com.xtreme.iptv
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         filterFavBtn.setOnClickListener {
             showOnlyFavs = !showOnlyFavs
-            filterFavBtn.setColorFilter(if (showOnlyFavs) 0xFF00D9FF.toInt() else 0xFF7C8699.toInt())
+            filterFavBtn.setColorFilter(if (showOnlyFavs) Color.parseColor("#00D9FF") else Color.parseColor("#7C8699"))
             applyFilter()
         }
 
@@ -174,11 +175,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             val isFav = FavManager.isFav(this@MainActivity, c.streamId)
-            holder.favBtn.setColorFilter(if (isFav) 0xFFFF4081.toInt() else 0xFF7C8699.toInt())
+            holder.favBtn.setColorFilter(if (isFav) Color.parseColor("#FF4081") else Color.parseColor("#7C8699"))
 
             holder.favBtn.setOnClickListener {
                 val added = FavManager.toggleFav(this@MainActivity, c.streamId)
-                holder.favBtn.setColorFilter(if (added) 0xFFFF4081.toInt() else 0xFF7C8699.toInt())
+                holder.favBtn.setColorFilter(if (added) Color.parseColor("#FF4081") else Color.parseColor("#7C8699"))
                 Toast.makeText(this@MainActivity, if (added) "أضيف للمفضلة" else "أزيل من المفضلة", Toast.LENGTH_SHORT).show()
                 if (showOnlyFavs && !added) applyFilter()
             }
