@@ -27,6 +27,7 @@
         <activity android:name=".MainActivity" android:exported="false"/>
 
         <activity
+            <activity android:name=".VodActivity" android:exported="false"/>
             android:name=".PlayerActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|keyboardHidden"
