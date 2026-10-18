@@ -6,12 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.xtreme.iptv.adapter.SeriesAdapter
-import com.xtreme.iptv.adapter.VodAdapter
+import com.xtreme.iptv.adapter.HomeAdapter
+import com.xtreme.iptv.adapter.HomeCard
 import com.xtreme.iptv.api.XtreamApi
 import kotlinx.coroutines.*
 
@@ -43,11 +42,12 @@ class HomeFragment : Fragment() {
             if (_binding != null) {
                 moviesProgress.visibility = View.GONE
                 if (movies.isNotEmpty()) {
-                    moviesRv.adapter = VodAdapter(movies.take(20)) { v ->
+                    val cards = movies.take(20).map { HomeCard(it.streamId, it.name, it.streamIcon, "movie", it.containerExtension) }
+                    moviesRv.adapter = HomeAdapter(cards) { card ->
                         startActivity(Intent(requireContext(), PlayerActivity::class.java).apply {
-                            putExtra("name", v.name)
-                            putExtra("url", XtreamApi.vodUrl(v.streamId, v.containerExtension))
-                            putExtra("logo", v.streamIcon)
+                            putExtra("name", card.title)
+                            putExtra("url", XtreamApi.vodUrl(card.id, card.ext))
+                            putExtra("logo", card.poster)
                             putExtra("streamId", 0)
                         })
                     }
@@ -61,10 +61,11 @@ class HomeFragment : Fragment() {
             if (_binding != null) {
                 seriesProgress.visibility = View.GONE
                 if (series.isNotEmpty()) {
-                    seriesRv.adapter = SeriesAdapter(series.take(20)) { s ->
+                    val cards = series.take(20).map { HomeCard(it.seriesId, it.name, it.cover, "series") }
+                    seriesRv.adapter = HomeAdapter(cards) { card ->
                         startActivity(Intent(requireContext(), SeriesDetailActivity::class.java).apply {
-                            putExtra("seriesId", s.seriesId)
-                            putExtra("name", s.name)
+                            putExtra("seriesId", card.id)
+                            putExtra("name", card.title)
                         })
                     }
                 }
