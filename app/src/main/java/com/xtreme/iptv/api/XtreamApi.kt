@@ -34,8 +34,14 @@ object XtreamApi {
     }
 
     fun getLiveStreams(categoryId: String? = null): List<Channel> {
-        val cat = if (categoryId.isNullOrEmpty()) "" else "&category_id=$categoryId"
-        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_streams$cat") ?: return emptyList()
+        if (categoryId.isNullOrEmpty()) {
+            val cats = getLiveCategories()
+            if (cats.isEmpty()) return emptyList()
+            val all = mutableListOf<Channel>()
+            for (cat in cats) { all.addAll(getLiveStreams(cat.id)) }
+            return all.distinctBy { it.streamId }
+        }
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_live_streams&category_id=$categoryId") ?: return emptyList()
         val list = mutableListOf<Channel>()
         try {
             val arr = JSONArray(json)
@@ -53,21 +59,20 @@ object XtreamApi {
     }
 
     fun getVodStreams(categoryId: String? = null): List<VodItem> {
-        val cat = if (categoryId.isNullOrEmpty()) "" else "&category_id=$categoryId"
-        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_vod_streams$cat") ?: return emptyList()
+        if (categoryId.isNullOrEmpty()) {
+            val cats = getVodCategories()
+            if (cats.isEmpty()) return emptyList()
+            val all = mutableListOf<VodItem>()
+            for (cat in cats) { all.addAll(getVodStreams(cat.id)) }
+            return all.distinctBy { it.streamId }
+        }
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_vod_streams&category_id=$categoryId") ?: return emptyList()
         val list = mutableListOf<VodItem>()
         try {
             val arr = JSONArray(json)
             for (i in 0 until arr.length()) {
                 val o = arr.getJSONObject(i)
-                list.add(VodItem(
-                    streamId = o.optInt("stream_id"),
-                    name = o.optString("name"),
-                    streamIcon = o.optString("stream_icon"),
-                    rating = o.optString("rating"),
-                    containerExtension = o.optString("container_extension", "mp4"),
-                    categoryId = o.optString("category_id")
-                ))
+                list.add(VodItem(o.optInt("stream_id"), o.optString("name"), o.optString("stream_icon"), o.optString("rating"), o.optString("container_extension", "mp4"), o.optString("category_id")))
             }
         } catch (_: Exception) {}
         return list
@@ -79,20 +84,20 @@ object XtreamApi {
     }
 
     fun getSeries(categoryId: String? = null): List<SeriesItem> {
-        val cat = if (categoryId.isNullOrEmpty()) "" else "&category_id=$categoryId"
-        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_series$cat") ?: return emptyList()
+        if (categoryId.isNullOrEmpty()) {
+            val cats = getSeriesCategories()
+            if (cats.isEmpty()) return emptyList()
+            val all = mutableListOf<SeriesItem>()
+            for (cat in cats) { all.addAll(getSeries(cat.id)) }
+            return all.distinctBy { it.seriesId }
+        }
+        val json = get("${Prefs.host}/player_api.php?username=${Prefs.user}&password=${Prefs.pass}&action=get_series&category_id=$categoryId") ?: return emptyList()
         val list = mutableListOf<SeriesItem>()
         try {
             val arr = JSONArray(json)
             for (i in 0 until arr.length()) {
                 val o = arr.getJSONObject(i)
-                list.add(SeriesItem(
-                    seriesId = o.optInt("series_id"),
-                    name = o.optString("name"),
-                    cover = o.optString("cover"),
-                    rating = o.optString("rating"),
-                    categoryId = o.optString("category_id")
-                ))
+                list.add(SeriesItem(o.optInt("series_id"), o.optString("name"), o.optString("cover"), o.optString("rating"), o.optString("category_id")))
             }
         } catch (_: Exception) {}
         return list
