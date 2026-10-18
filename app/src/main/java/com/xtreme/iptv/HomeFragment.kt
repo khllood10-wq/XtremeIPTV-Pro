@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,8 @@ class HomeFragment : Fragment() {
 
         val moviesRv = view.findViewById<RecyclerView>(R.id.homeMoviesRv)
         val seriesRv = view.findViewById<RecyclerView>(R.id.homeSeriesRv)
+        val moviesProgress = view.findViewById<ProgressBar>(R.id.moviesProgress)
+        val seriesProgress = view.findViewById<ProgressBar>(R.id.seriesProgress)
 
         moviesRv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         seriesRv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -37,14 +40,17 @@ class HomeFragment : Fragment() {
         // جلب أحدث الأفلام
         scope.launch {
             val movies = withContext(Dispatchers.IO) { XtreamApi.getVodStreams() }
-            if (_binding != null && movies.isNotEmpty()) {
-                moviesRv.adapter = VodAdapter(movies.take(20)) { v ->
-                    startActivity(Intent(requireContext(), PlayerActivity::class.java).apply {
-                        putExtra("name", v.name)
-                        putExtra("url", XtreamApi.vodUrl(v.streamId, v.containerExtension))
-                        putExtra("logo", v.streamIcon)
-                        putExtra("streamId", 0)
-                    })
+            if (_binding != null) {
+                moviesProgress.visibility = View.GONE
+                if (movies.isNotEmpty()) {
+                    moviesRv.adapter = VodAdapter(movies.take(20)) { v ->
+                        startActivity(Intent(requireContext(), PlayerActivity::class.java).apply {
+                            putExtra("name", v.name)
+                            putExtra("url", XtreamApi.vodUrl(v.streamId, v.containerExtension))
+                            putExtra("logo", v.streamIcon)
+                            putExtra("streamId", 0)
+                        })
+                    }
                 }
             }
         }
@@ -52,9 +58,15 @@ class HomeFragment : Fragment() {
         // جلب أحدث المسلسلات
         scope.launch {
             val series = withContext(Dispatchers.IO) { XtreamApi.getSeries() }
-            if (_binding != null && series.isNotEmpty()) {
-                seriesRv.adapter = SeriesAdapter(series.take(20)) { s ->
-                    Toast.makeText(requireContext(), "قريباً: حلقات ${s.name}", Toast.LENGTH_SHORT).show()
+            if (_binding != null) {
+                seriesProgress.visibility = View.GONE
+                if (series.isNotEmpty()) {
+                    seriesRv.adapter = SeriesAdapter(series.take(20)) { s ->
+                        startActivity(Intent(requireContext(), SeriesDetailActivity::class.java).apply {
+                            putExtra("seriesId", s.seriesId)
+                            putExtra("name", s.name)
+                        })
+                    }
                 }
             }
         }
