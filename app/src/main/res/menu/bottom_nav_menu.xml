@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
-        android:icon="@android:drawable/ic_menu_compass"
+        android:icon="@drawable/ic_home"
         android:title="الرئيسية" />
     <item
         android:id="@+id/nav_live"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@drawable/ic_live"
         android:title="القنوات" />
     <item
         android:id="@+id/nav_movies"
-        android:icon="@android:drawable/ic_menu_gallery"
+        android:icon="@drawable/ic_movies"
         android:title="الأفلام" />
     <item
         android:id="@+id/nav_series"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@drawable/ic_series"
         android:title="المسلسلات" />
 </menu>
