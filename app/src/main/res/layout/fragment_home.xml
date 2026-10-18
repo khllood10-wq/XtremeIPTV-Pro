@@ -19,11 +19,23 @@
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/homeMoviesRv"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_height="220dp"
+            android:layout_marginBottom="24dp">
+            
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/homeMoviesRv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+                
+            <ProgressBar
+                android:id="@+id/moviesProgress"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/neon_cyan"/>
+        </FrameLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,10 +46,21 @@
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/homeSeriesRv"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+            android:layout_height="220dp">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/homeSeriesRv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+                
+            <ProgressBar
+                android:id="@+id/seriesProgress"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/neon_cyan"/>
+        </FrameLayout>
     </LinearLayout>
 </ScrollView>
