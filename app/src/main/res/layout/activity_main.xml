@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 1. المحتوى الأساسي (الشاشات والبار السفلي وزر الإعدادات) -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,12 +33,12 @@
                 app:menu="@menu/bottom_nav_menu" />
         </LinearLayout>
 
-        <!-- زر فتح القائمة الجانبية (يطفو على يمين الشاشة) -->
+        <!-- زر فتح القائمة (تم تثبيته على اليمين باستخدام alignParentRight) -->
         <ImageView
             android:id="@+id/openDrawerBtn"
             android:layout_width="40dp"
             android:layout_height="60dp"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_search"
             android:src="@android:drawable/ic_menu_sort_by_size"
@@ -49,7 +48,7 @@
 
     </RelativeLayout>
 
-    <!-- 2. القائمة الجانبية (تنزلق من اليمين) -->
+    <!-- القائمة الجانبية -->
     <LinearLayout
         android:layout_width="280dp"
         android:layout_height="match_parent"
@@ -106,6 +105,5 @@
             android:textColor="@color/neon_pink"
             android:textSize="16sp"
             android:background="?android:attr/selectableItemBackground"/>
-
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
